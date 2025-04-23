@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import InputField from "../components/InputField";
 import { useNavigate,Link } from "react-router-dom";
 import apiCall from "../../helpers/api";
-import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const {setUser} = useAuth();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -17,11 +16,11 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await apiCall.post("/auth/login", form, { withCredentials: true });
-      setUser(res.data.user);
+      // console.log(res?.data?.user);
+      Cookies.set("portalUserInfo",JSON.stringify(res?.data?.user), { expires: 7 });
       navigate("/dashboard");
     } catch (err) {
       toast.error(err?.response?.data?.message);
-      console.log(err.response?.data?.message || "Login failed");
     }
   };
 

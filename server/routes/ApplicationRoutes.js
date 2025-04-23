@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/apply', authentication,authorization(['jobseeker']), uploadWithModule("application").single('resume'), applyForJob);
 router.get('/my-applications', authentication,authorization(['jobseeker']), getMyApplications);
 router.get('/job-applications', authentication,authorization(['recruiter']), getJobApplicantions);
-router.get('/job-applications', authentication,authorization(['recruiter']), getJobApplicantions);
-router.patch('/application/:applicationId/updateStatus', authentication,authorization(['recruiter']), updateApplicationStatus);
+router.patch('/:applicationId/updateStatus', authentication,authorization(['recruiter']), updateApplicationStatus);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const path = require("path");
 const applyForJob = async (req, res) => {
     const { job_id } = req.body;
     const applicant_id = req.user.userId;
-    const resume = req.file ? "uploads" + path.join(path.basename(req.file.destination), req.file.filename) : null;
+    const resume = req.file ? "uploads/" + path.join(path.basename(req.file.destination), req.file.filename) : null;
   
     try {
 
@@ -35,7 +35,7 @@ const applyForJob = async (req, res) => {
 const getMyApplications = async(req,res) => {
     try{
         const applications = await Application.find({ applicant_id: req.user.userId }).populate('job_id').sort({createdAt : -1});
-        res.status(200).json({ message: 'Application Details Fetched Successfully.', data: { applications } });
+        res.status(200).json({ message: 'Application Details Fetched Successfully.', data:  applications  });
     } catch(err){
         res.status(500).json({ message: 'Failed to fetch applications.', error: err.message });
     }
@@ -65,7 +65,7 @@ const updateApplicationStatus = async (req, res) => {
         return res.status(404).json({ message: 'Application not found.' });
       }
 
-      if (application.job_id.postedBy.toString() !== req.user._id.toString()) {
+      if (application.job_id.createdBy.toString() !== req.user.userId.toString()) {
         return res.status(400).json({ message: 'You are not authorized to update this application.' });
       }
   

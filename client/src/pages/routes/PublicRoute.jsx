@@ -1,11 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import Cookies from 'js-cookie';
 
-const PublicRoute = ({ children }) => {
-  const {user} = useAuth();
-
-  if (user !== undefined && user) return <Navigate to="/dashboard" />;
-
+const PublicRoute = ({children}) => {
+  const userCookie = Cookies.get("portalUserInfo");
+  if (userCookie) return <Navigate to="/dashboard" />;
   return children;
 };
 

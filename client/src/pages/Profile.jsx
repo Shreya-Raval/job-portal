@@ -2,34 +2,37 @@ import React, { useEffect, useState } from "react";
 import apiCall from "../helpers/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "./context/AuthContext";
+import Cookies from "js-cookie";
 
 const Profile = () => {
-  const [profile, setProfile] = useState({ firstName: "", lastName: "", email: "" });
+  const [profile, setProfile] = useState({ firstName: "", lastName: "" });
   const navigate = useNavigate();
-  //const {user,setUser} = useAuth();
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const res = await apiCall.get("/user/profile");
-        //setUser(res.data.data);
+        setProfile({firstName: res?.data?.data?.firstName, lastName: res?.data?.data?.lastName})
       } catch (err) {
         console.error(err);
       }
     };
-
     fetchProfile();
   }, [navigate]);
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
-console.log(profile);
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await apiCall.put("/user/update-profile", profile);
+      const res = await apiCall.put("/user/update-profile", profile);
+  
       toast.success("Profile Updated Successfully");
+      Cookies.set('portalUserInfo', JSON.stringify(res?.data?.user), {
+        expires: 1,
+      });
+      navigate('/refresh');  
+      setTimeout(() => navigate('/dashboard'), 0);
     } catch (err) {
       console.log(err);
       toast.error("Error occured while profile update")
@@ -56,16 +59,6 @@ console.log(profile);
             type="text"
             name="lastName"
             value={profile.lastName}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={profile.email}
             onChange={handleChange}
             className="w-full p-2 border rounded"
           />

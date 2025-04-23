@@ -1,10 +1,9 @@
 import JobList from "./components/JobListing";
 import SideBar from "./components/SideBar";
-import { useAuth } from "./context/AuthContext";
+import { useOutletContext } from "react-router-dom";
 
 const Dashboard = () => {
-  const {user} = useAuth();
-  console.log(user);
+  const {user} = useOutletContext();
   return (
     <div className="flex min-h-screen">      
       <SideBar/>

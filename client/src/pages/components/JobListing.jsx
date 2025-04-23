@@ -1,15 +1,15 @@
-import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import apiCall from "../../helpers/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import ApplyModal from "./ApplyModal";
+import { confirmDelete } from "../../helpers/common";
 
 const JobList = () => {
-  const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [applyJobId, setApplyJobId] = useState(null); 
   const navigate = useNavigate();
   const [isModalOpen,setModalOpen] = useState(false);
+  const { user } = useOutletContext(); 
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -30,12 +30,14 @@ const JobList = () => {
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this job?")) return;
-    try {
-      await apiCall.delete(`/job/${id}`);
-      setJobs((prev) => prev.filter((job) => job._id !== id));
-    } catch (err) {
-      console.error("Failed to delete job", err);
+    const isConfirm  = confirmDelete("Are you sure you want to delete this Job?", "Delete Job");
+    if(isConfirm){
+     try {
+        await apiCall.delete(`/job/${id}`);
+        setJobs((prev) => prev.filter((job) => job._id !== id));
+      } catch (err) {
+        console.error("Failed to delete job", err);
+      }
     }
   };
 

@@ -1,6 +1,6 @@
 const dotenv =  require("dotenv");
 const mongoose = require("mongoose");
-const User = require("./models/userModel.js");
+const User = require("./models/UserModel.js");
 const {hashPassword} = require("./helpers/AuthHelper.js");
 
 

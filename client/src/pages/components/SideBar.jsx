@@ -1,14 +1,14 @@
 import apiCall from "../../helpers/api";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const {user,setUser} = useAuth()
+    const { user } = useOutletContext();
     const handleLogout = async () => {
         try {
           await apiCall.get("/auth/logout");
-          setUser(null); 
+          Cookies.remove('portalUserInfo')
           navigate("/login");
         } catch (err) {
           console.error("Logout failed", err);
@@ -26,7 +26,7 @@ const SideBar = () => {
         {(user?.role === "recruiter" )  && (
           <>
           <button
-            onClick={() => navigate("/jobs")}
+            onClick={() => navigate("/job-applications")}
             className="block w-full text-left text-blue-600 font-semibold mb-4 hover:underline"
           >
             View Applicants
@@ -45,7 +45,7 @@ const SideBar = () => {
         )}
           {(user?.role === "jobseeker" )  && (
           <button
-            onClick={() => navigate("/manage-jobs")}
+            onClick={() => navigate("/my-applications")}
             className="block w-full text-left text-blue-600 font-semibold mb-4 hover:underline"
           >
             View Applications

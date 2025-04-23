@@ -1,18 +1,22 @@
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Navigate, Outlet } from "react-router-dom";
+import Cookies from "js-cookie";
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const {user} = useAuth();
+const ProtectedRoute = ({ allowedRoles }) => {
+  const userCookie = Cookies.get("portalUserInfo");
 
-  //if (user === undefined) return <div>Loading...</div>;
-  if (user === null) return <Navigate to="/login" />; 
-  if (!user) return <Navigate to="/login" />;
+  if (!userCookie) return <Navigate to="/login" />;
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  try {
+    const user = JSON.parse(userCookie);
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+      return <Navigate to="/login" />;
+    }
+
+    return <Outlet context={{ user }} />;
+  } catch (error) {
+    console.error("Invalid user cookie");
     return <Navigate to="/login" />;
   }
-
-  return children;
 };
 
 export default ProtectedRoute;

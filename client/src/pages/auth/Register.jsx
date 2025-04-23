@@ -3,6 +3,7 @@ import InputField from "../components/InputField";
 import { useNavigate,Link } from "react-router-dom";
 import apiCall from "../../helpers/api";
 import { toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -23,7 +24,8 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await apiCall.post("auth/register", form, { withCredentials: true });
-      setUser(res.data.user);
+      Cookies.set("portalUserInfo",JSON.stringify(res?.data?.user), { expires: 1 });
+      // console.log(res?.data?.user);
       navigate("/dashboard");
     } catch (err) {
       //console.log(err?.response?.data?.message);
