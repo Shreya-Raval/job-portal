@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createJob, getJobById, updateJob } from "../services/jobApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { enumText } from "../helpers/common";
 
 const JobForm = () => {
   const { id } = useParams();
@@ -40,7 +41,7 @@ const JobForm = () => {
         await createJob(form);
         toast.success("Job created successfully");
       }
-      navigate("/recruiter/dashboard");
+      navigate("/dashboard");
     } catch {
       toast.error("Failed to submit job");
     }
@@ -59,15 +60,18 @@ const JobForm = () => {
             key={field}
             type="text"
             name={field}
-            placeholder={field}
+            placeholder={enumText(field)}
             value={form[field]}
             onChange={handleChange}
             className="w-full border p-2 rounded"
-            required
+            required={['title','company','location'].includes(field)}
           />
         ))}
         <button className="bg-green-600 text-white px-4 py-2 rounded">
           {isEditing ? "Update" : "Create"}
+        </button>
+        <button className="bg-gray-500 text-white px-4 py-2 rounded ml-2" type="button" onClick={() => navigate("/dashboard")}>
+          Cancel
         </button>
       </form>
     </div>

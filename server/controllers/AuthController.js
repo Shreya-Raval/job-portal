@@ -26,13 +26,18 @@ exports.register = async(req,res) => {
 
         await user.save();
         
-        const token = await generateToken(user._id,user.role);
+        const userName = `${user.firstName} ${user.lastName}`;
+        const token = await generateToken(user._id,user.role,userName);
         
-        res.cookie("token", token, {
+        res.cookie("portal_info", token, {
             httpOnly: true
         });
 
-        return res.status(200).json({message: "User registered successfully"});
+        return res.status(200).json({message: "User registered successfully", user: { 
+            userId: user._id,
+            role: user.role,
+            userName: `${user.firstName} ${user.lastName}`
+          }});
 
     } catch(err){
         return res.status(500).json({message: `Error occured while registration ${err}`});
@@ -50,19 +55,22 @@ exports.login = async(req,res) => {
         if(!user){
             return res.status(400).json({message: "Invalid Credentials"});
         }
-       //console.log(typeof(password));
-       //console.log(typeof(user.password));return false;
+        
         const checkPassword = await comparePassword(password,user.password);
         if(!checkPassword){
             return res.status(400).json({message: "Invalid Credentials"});
         }
-
-        const token = await generateToken(user._id,user.role);
-        res.cookie("token",token,{
+        const userName = `${user.firstName} ${user.lastName}`;
+        const token = await generateToken(user._id,user.role,userName); 
+        res.cookie("portal_info",token,{
             httpOnly: true
         });
 
-        return res.status(200).json({message: "User Logged In successfully"});
+        return res.status(200).json({message: "User Logged In successfully",user: { 
+            userId: user._id,
+            role: user.role,
+            userName: `${user.firstName} ${user.lastName}`
+          }});
 
     } catch(err){
         return res.status(500).json({message: `Error occured while login ${err}`});
@@ -70,5 +78,5 @@ exports.login = async(req,res) => {
 }
 
 exports.logout = (req,res) => {
-    res.clearCookie('token').status(200).json({message: 'User Logged out successfully'});
+    res.clearCookie('portal_info').status(200).json({message: 'User Logged out successfully'});
 }

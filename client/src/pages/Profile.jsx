@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import apiCall from "../helpers/api";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuth } from "./context/AuthContext";
 
 const Profile = () => {
   const [profile, setProfile] = useState({ firstName: "", lastName: "", email: "" });
   const navigate = useNavigate();
-
+  //const {user,setUser} = useAuth();
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await apiCall.get("/profile");
-        setProfile(res.data.data);
+        const res = await apiCall.get("/user/profile");
+        //setUser(res.data.data);
       } catch (err) {
         console.error(err);
       }
@@ -22,14 +24,15 @@ const Profile = () => {
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
-
+console.log(profile);
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       await apiCall.put("/user/update-profile", profile);
-      alert("Profile updated!");
+      toast.success("Profile Updated Successfully");
     } catch (err) {
-      console.error("Update failed", err);
+      console.log(err);
+      toast.error("Error occured while profile update")
     }
   };
 
@@ -71,7 +74,14 @@ const Profile = () => {
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
-          Save Changes
+          Save
+        </button>
+        <button
+          type="button"
+          className="bg-gray-500 text-white py-2 px-4 ml-2 rounded hover:bg-gray-600"
+          onClick={() => navigate("/dashboard")}
+        >
+          Back
         </button>
       </form>
     </div>

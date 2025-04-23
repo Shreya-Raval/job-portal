@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputField from "../components/InputField";
 import { useNavigate,Link } from "react-router-dom";
 import apiCall from "../../helpers/api";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -22,9 +23,11 @@ const Register = () => {
     e.preventDefault();
     try {
       const res = await apiCall.post("auth/register", form, { withCredentials: true });
-      //alert(res.data.message);
+      setUser(res.data.user);
       navigate("/dashboard");
     } catch (err) {
+      //console.log(err?.response?.data?.message);
+      toast.error(err?.response?.data?.message);
       console.log(err.response?.data?.message || "Registration failed");
     }
   };
@@ -44,7 +47,7 @@ const Register = () => {
             <option value="recruiter">Recruiter</option>
           </select>
         </div>
-        <button type="submit" className="bg-blue-500 hover:bg-blue-600 w-full text-white font-bold py-2 px-4 rounded focus:outline-none">
+        <button type="submit" className="bg-green-500 hover:bg-green-600 w-full text-white font-bold py-2 px-4 rounded focus:outline-none">
           Register
         </button>
         <p className="mt-2 text-center text-sm text-gray-600">

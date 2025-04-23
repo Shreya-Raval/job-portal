@@ -5,9 +5,9 @@ const {getJobs, createJob,updateJob,deleteJob} = require("../controllers/JobCont
 const {authentication,authorization} = require("../middleware/AuthMiddleware");
 
 router.get('/', authentication, getJobs);
-router.post('/', authentication, authorization(['admin', 'recruiter']), createJob);
+router.post('/', authentication, authorization(['recruiter']), createJob);
 router.get('/:id', authentication, getJobs);
-router.put('/:id', authentication, authorization(['admin', 'recruiter']), updateJob);
+router.put('/:id', authentication, authorization(['recruiter']), updateJob);
 router.delete('/:id', authentication, authorization(['admin', 'recruiter']), deleteJob);
 
 module.exports = router;

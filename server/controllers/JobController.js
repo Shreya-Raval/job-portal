@@ -12,7 +12,7 @@ const getJobs = async(req,res) => {
             return res.status(200).json({message: 'Job details fetched successfully', data : {jobDetail}});
         }
         const jobs = await Job.find();
-        return res.status(200).json(jobs);
+        return res.status(200).json({jobs: jobs});
     } catch(err){
         return res.status(500).json({message: `Error occured while fetching jobs ${err}`});
     }

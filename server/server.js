@@ -5,6 +5,8 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/AuthRoutes");
 const userRoutes = require("./routes/UserRoutes");
 const jobRoutes = require("./routes/JobRoutes");
+const applicationRoutes = require("./routes/ApplicationRoutes");
+
 const cookieParser = require("cookie-parser");
 dotenv.config();
 
@@ -32,6 +34,9 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/job", jobRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use("/api/application",applicationRoutes);
+
 //server connection on port
 const PORT = process.env.PORT || 8000;
 app.listen(PORT,() => {

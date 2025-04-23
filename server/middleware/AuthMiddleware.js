@@ -5,7 +5,7 @@ dotenv.config();
 
 const authentication = (req,res,next) => {
     try{
-        const token = req.cookies.token;
+        const token = req.cookies.portal_info;
         if(!token){
             return res.status(400).json({ message: "Unauthenticated request" });
         }

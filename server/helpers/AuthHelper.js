@@ -24,9 +24,9 @@ const comparePassword = async(password,hashedPassword) => {
     }
 }
 
-const generateToken = async(userId,role) => {
+const generateToken = async(userId,role,userName) => {
     try {
-        const token =  await jwt.sign({ userId,role },process.env.JWT_SECRET_KEY,{
+        const token =  await jwt.sign({ userId,role,userName },process.env.JWT_SECRET_KEY,{
             expiresIn: '1d'
         });
         return token;

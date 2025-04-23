@@ -18,6 +18,23 @@ const getProfile = async(req,res) => {
     }
 }
 
+const getAllUsers = async(req,res) => {
+    try{
+        const users = await User.find( { role: {$ne:  'admin' } } );
+    } catch (err) {
+        res.status(500).json({message: `Error occurred while fetching users ${err}`});
+    }
+}
+
+const getUser =  (req, res) => {
+    res.json( { data : {
+        id: req.user.userId,
+        name: req.user.userName,
+        role: req.user.role,
+    }
+    });
+};
+
 const updateProfile = async(req,res) => {
     try{
         const { firstName, lastName, email } = req.body;
@@ -39,4 +56,4 @@ const updateProfile = async(req,res) => {
     }
 }
 
-module.exports = {getProfile,updateProfile}
+module.exports = {getProfile,updateProfile,getUser,getAllUsers}

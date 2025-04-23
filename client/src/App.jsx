@@ -5,54 +5,43 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import RecruiterDashboard from './pages/RecruiterDashboard';
 import JobForm from './pages/JobForm';
+import PublicRoute from './pages/routes/PublicRoute';
+import ProtectedRoute from './pages/routes/ProtectedRoute';
+import Home from './pages/Home';
 
 function App() {
-  // Set up axios defaults on app load
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  //   }
-    
-  //   // Set base URL if you're using a separate backend
-  //   // axios.defaults.baseURL = 'http://localhost:5000';
-  // }, []);
 
   return (
+    
     <Router>
       <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
-        {/* Protected routes */}
+          <Route path="/" element={<PublicRoute> <Home /> </PublicRoute>} />
+          <Route path="/login" element={<PublicRoute> <Login /> </PublicRoute>} />
+          <Route path="/register" element={<PublicRoute><Register /> </PublicRoute>} />
         <Route 
           path="/dashboard" 
           element={
-            // <ProtectedRoute>
+            // <ProtectedRoute >
             //   <Dashboard />
             // </ProtectedRoute>
-              <Dashboard />
+            <Dashboard/>
           } 
         />
         <Route 
           path="/profile" 
           element={
-            // <ProtectedRoute>
-            //   <Profile />
-            // </ProtectedRoute>
-            <Profile/>
+            //  <ProtectedRoute>
+            //    <Profile />
+            //  </ProtectedRoute>
+            <Profile />
           } 
         />
-        
-      <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
-      <Route path="/recruiter/create" element={<JobForm />} />
-      <Route path="/recruiter/edit/:id" element={<JobForm />} />
+{/*         
+        <Route path="/recruiter/dashboard" element={<ProtectedRoute allowedRoles={['recruiter']}> <RecruiterDashboard /> </ProtectedRoute>} /> */}
+        <Route path="/job/edit/:id" element={<ProtectedRoute allowedRoles={['recruiter']}><JobForm /></ProtectedRoute>} /> 
 
-
-        {/* Redirect to login if no route matches */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/job/create" element={<ProtectedRoute allowedRoles={['recruiter']}> <JobForm /> </ProtectedRoute>} />
+        <Route path="*" element={<Navigate to="/login" replace />} /> 
       </Routes>
     </Router>
   );
