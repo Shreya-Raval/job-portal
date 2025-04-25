@@ -43,6 +43,15 @@ const getMyApplications = async(req,res) => {
 
 const getJobApplicantions = async(req,res) => {
     try{
+        const job_id = req.params.id;
+        if(job_id){
+          const jobs = await Job.findById(job_id);
+          if(!jobs){
+            res.status(400).json({ message: 'Job not available'});
+          }
+          const applications = await Application.find({ job_id }).populate('job_id','title location').populate('applicant_id','firstName lastName email').sort({ createdAt : -1});
+          return res.status(200).json({ message: 'Application Details Fetched Successfully.', data: { applications } });
+        }
         const allPostedJobs = await Job.find({ createdBy: req.user.userId }, '_id' );
         const jobIds = allPostedJobs.map(job => job._id );
 

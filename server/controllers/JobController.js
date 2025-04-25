@@ -3,7 +3,7 @@ const Job = require("../models/JobModel");
 const getJobs = async(req,res) => {
     try{
         const jobId = req.params.id;
-        let jobDetail;
+        let jobDetail = [];
         if(jobId){
             jobDetail = await Job.findById(req.params.id).populate('createdBy','firstName lastName');
             if(!jobDetail){
@@ -11,8 +11,13 @@ const getJobs = async(req,res) => {
             }
             return res.status(200).json({message: 'Job details fetched successfully', data : {jobDetail}});
         }
-        const jobs = await Job.find();
-        return res.status(200).json({jobs: jobs});
+        let createdBy = req.user.userId;
+        if(req.user.role == 'recruiter' ){
+            jobDetail = await Job.find({createdBy}).sort({createdAt : -1});
+        } else {
+            jobDetail = await Job.find().sort({createdAt : -1});
+        }
+        return res.status(200).json( {data:  { jobDetail}});
     } catch(err){
         return res.status(500).json({message: `Error occured while fetching jobs ${err}`});
     }

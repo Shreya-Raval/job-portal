@@ -31,6 +31,7 @@ function App() {
             <Route path="/job/edit/:id" element={<JobForm />} /> 
             <Route path="/job/create" element={ <JobForm /> } />
             <Route path="/job-applications" element={ <RecruiterApplications /> } />
+            <Route path="/job-applications/:id" element={ <RecruiterApplications /> } />
           </Route>  
 
           <Route element={<ProtectedRoute allowedRoles={['jobseeker']}/>}>
